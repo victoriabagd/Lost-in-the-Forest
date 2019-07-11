@@ -1,0 +1,901 @@
+define J = Character (_('Jack'), color="#ead61c")
+define L = Character(_('Lora'), color="#66ccff") 
+define F = Character(_('Fairy'), color="#ff66cc") 
+define R = Character(_('Roger'), color="#66ccff") 
+define O = Character(_('Old man'), color="#886451") 
+define C = Character (_('Camilla'), color="#ff0000")
+
+label start:
+    $ money = 150 
+    $ price_potion_insomnia = 150 
+    $ price_pie = 50
+    $ price_meat = 70
+    $ price_amulet = 250
+    $ price_cloak = 100
+    $ price_hat = 50
+    $ price_shoes = 200
+    $ charisma = 50
+    $ energy = 100
+    $ mood = 100
+    $ luck = 0
+    $ food = 0
+    $ debt = 0
+    $ shoes = 0
+    jump main
+return
+
+label main:
+    scene bg c
+    "This is a story about a young man who dreamed of marrying a beautiful girl. Since ancient times in the village there is a tradition: a young man must find the Flower of True Love"
+    "According to legend, this flower can be found only by those whose love is true"
+    J "I'll find it no matter what!"
+    J "Probably, I'd better take my crossbow just in case."
+    "Jack takes the crossbow and goes outside"
+    J "I can not wait to go to the forest and find a flower! The old man always has a dozen stories about everything in the world, he can give advice on where to start the quest."
+    J "Also, my best friend Roger not so long ago was able to find this flower, and although the elders were strictly forbidden to disclose information about his location, he might not refuse to help me"
+    jump home_out
+return
+
+label home_out:
+    menu: 
+        "Go to the forest": 
+            jump forest 
+        "Go to village":
+            $ love = renpy.random.choice([True,False,False,False])
+            if love:
+                show C
+                J "Hi, Camilla!"
+                $ hey = renpy.random.choice([True,False])
+                if hey:
+                    C "Hi, Jack! I glad to see you!"
+                    $ mood += 50
+                    "Jack was inspired by the meeting with Camilla and his mood became [mood]"
+                    menu: 
+                        "Go to Old man":
+                            jump old
+                        "Go to Roger":
+                            jump Roger
+                        "Go to Lora":
+                            jump Lora
+                else:
+                    "Camilla ignores Jack"
+                    $ mood -= 50
+                    "Mood is [mood]"
+                    if mood <= 0:
+                        jump ending_3
+                    else:
+                        menu: 
+                            "Go to Old man":
+                                jump old
+                            "Go to Roger":
+                                jump Roger
+                            "Go to Lora":
+                                jump Lora
+            else:
+                menu: 
+                    "Go to Old man":
+                        jump old
+                    "Go to Roger":
+                        jump Roger
+                    "Go to Lora":
+                        jump Lora
+return 
+    
+label forest: 
+    scene bg 
+    "Jack enters the Forest"
+    if luck == 100:
+        jump lucky_forest
+    else:
+        "Energy is [energy], food: [food], mood: [mood]"
+        "Wandering through the woods, Jack lost track of time"
+        $ energy -= 3
+        if energy == 0:
+            jump ending_1
+        else:
+            if energy <= 25:
+                "Jack need to rest. Energy is [energy]"
+                menu:
+                    "Eat" if food > 0:
+                        $ food -= 1
+                        $ energy += 15
+                        $ mood += 3
+                        if mood <= 0:
+                            jump ending_3
+                        else:
+                            "Energy is [energy], food: [food], mood: [mood]"
+                            jump fo
+                    "Continue":
+                        jump fo
+            else:
+                jump fo
+return
+
+label lucky_forest:
+    "Luck accompanies Jack and he immediately finds a flower"
+    J "Yes!"
+    J "I did it!!"
+    jump ending_2
+return
+
+label fo:
+    "He goes further and further"
+    "Time seemed to be frozen"
+    "Jack goes out into the edge of the forest, it seems to him that he has been wandering for ages"
+    "It's time to rest"
+    "Energy is [energy], food: [food], mood: [mood]"
+    menu:
+        "Relax under the tree":
+            "Jack sits under a tree, his eyelids get heavy and he falls into a dream"
+            $ sleep = renpy.random.choice([True,False])
+            if sleep:
+                "While Jack is sleeping, the poisonous snake bits him"
+                jump ending_1
+            else:
+                $ energy += 15
+                $ mood += 3
+                if mood <= 0:
+                    jump ending_3
+                else:
+                    "Energy is [energy], food: [food], mood: [mood]"
+                    jump forest_2
+        "Continue searching":
+            J "This forest is endless"
+            J "I think, I'm lost"
+            $ mood -= 25
+            "Mood is [mood]"
+            if mood <= 0:
+                jump ending_3
+            else:
+                "His stomach rumbled"
+                $ energy -= 25
+                "Jack's energy is [energy] and mood:[mood], food:[food]"
+                if energy == 0:
+                    jump ending_1
+                else:
+                    if energy <= 25:
+                        "Jack need to rest. Energy is [energy]"
+                        menu:
+                            "Eat" if food > 0:
+                                $ food -= 1
+                                $ energy += 15
+                                $ mood += 3
+                                if mood <= 0:
+                                    jump ending_3
+                                else:
+                                    "Energy is [energy], food: [food], mood: [mood]"
+                                    jump forest_3
+                            "Continue":
+                                jump forest_3
+                    else:
+                        jump forest_3
+return
+
+label forest_2:
+    J "This forest is endless"
+    J "I think, I'm lost"
+    "His stomach rumbled"
+    $ energy -= 25
+    "Jack's energy is [energy] and mood:[mood], food:[food]"
+    if energy == 0:
+        jump ending_1
+    else:
+        if energy <= 25:
+            "Jack need to rest. Energy is [energy]"
+            menu:
+                "Eat" if food > 0:
+                    $ food -= 1
+                    $ energy += 15
+                    $ mood += 3
+                    if mood <= 0:
+                        jump ending_3
+                    else:
+                        "Energy is [energy], food: [food], mood: [mood]"
+                        jump forest_3
+                "Continue":
+                        jump forest_3
+        else:
+            jump forest_3
+return
+
+label forest_3:
+    "Jack looks around and sees a few bushes with berries"
+    "Energy is [energy], food: [food], mood: [mood]"
+    menu: 
+        "Eat red berries":
+            "Jack throws a handful of berries in his mouth and swallows it. Suddenly his face turns blue, he grabs his neck and falls dead"
+            jump ending_1
+        "Eat blue berries":
+            $ energy += 5
+            "Jack's energy is [energy] and mood:[mood], food:[food]"
+            if energy == 0:
+                jump ending_1
+            else:
+                if energy <= 25:
+                    "Jack need to rest. Energy is [energy]"
+                    menu:
+                        "Eat" if food > 0:
+                            $ food -= 1
+                            $ energy += 15
+                            $ mood += 3
+                            if mood <= 0:
+                                jump ending_3
+                            else:
+                                "Energy is [energy], food: [food], mood: [mood]"
+                                jump foo
+                        "Continue":
+                            jump foo
+                else:
+                    jump foo
+return
+
+label foo:
+    "Fairy appears in front of Jack"
+    J "Wow"
+    F "In this part of the forest I can rarely see a human! You looks bad, and I want to help you"
+    F "What do you want?"
+    "Energy is [energy], food: [food], mood: [mood]"
+    menu:
+        "Eat": 
+            "A large piece of cake appears in front of the Jack"
+            $ energy += 10 
+            $ mood += 5
+            "Jack's energy is [energy] and mood:[mood], food:[food]"
+            if energy == 0:
+                jump ending_1
+            else:
+                if energy <= 25:
+                    "Jack need to rest. Energy is [energy]"
+                    menu:
+                        "Eat" if food > 0:
+                            $ food -= 1
+                            $ energy += 15
+                            $ mood += 3
+                            if mood <= 0:
+                                jump ending_3
+                            else:
+                                "Energy is [energy], food: [food], mood: [mood]"
+                                jump forest_4
+                        "Continue":
+                            jump forest_4
+                else:
+                    jump forest_4
+        "I want to find a Flower of True love":
+                    jump forest_5
+return
+
+label forest_4:
+    "As soon as the guy ate the pie, the fairy disappeared"
+    J "I had to ask how to find the way!"
+    J "Fairy must know the answer"
+    J "Maybe..."
+    J "I need to eat berries again"
+    menu: 
+        "Eat red berries":
+            $ energy += 5
+            "Jack's energy is [energy] and mood:[mood], food:[food]"
+            if energy == 0:
+                jump ending_1
+            else:
+                if energy <= 25:
+                    "Jack need to rest. Energy is [energy]"
+                    menu:
+                        "Eat" if food > 0:
+                            $ food -= 1
+                            $ energy += 15
+                            $ mood += 3
+                            if mood <= 0:
+                                jump ending_3
+                            else:
+                                "Energy is [energy], food: [food], mood: [mood]"
+                                jump fooo
+                        "Continue":
+                            jump fooo
+                else:
+                    jump fooo
+        "Eat blue berries":
+            "Jack throws a handful of berries in his mouth and swallows it. Suddenly his face turns blue, he grabs his neck and falls dead"
+            jump ending_1          
+return
+
+label fooo:
+    "Fairy appears in front of Jack"
+    J "Please, help me"
+    J "I must to find the right way"
+    F "I know"
+    F "I like you, so I'll help you"
+    F "You should find the swamp"
+    F "I will lead you"
+    F "By the way, you can take red berries, I promise everything will be good"
+    "Energy is [energy], food: [food], mood: [mood]"
+    menu:
+        "Take berries":
+            $ food += 2
+            "Jack have [food] sets of food"
+            "Jack's energy is [energy] and mood:[mood], food:[food]"
+            if energy == 0:
+                jump ending_1
+            else:
+                if energy <= 25:
+                    "Jack need to rest. Energy is [energy]"
+                    menu:
+                        "Eat" if food > 0:
+                            $ food -= 1
+                            $ energy += 15
+                            $ mood += 3
+                            if mood <= 0:
+                                jump ending_3
+                            else:
+                                "Energy is [energy], food: [food], mood: [mood]"
+                                jump swamp
+                        "Continue":
+                            jump swamp
+                else:
+                    jump swamp
+        "Don't take berries":
+            F "Hm"
+            $ charisma -= 10
+            $ mood -= 10
+            "Jack's charisma and mood decreased" 
+            "Charisma is [charisma]"
+            "Energy is [energy], food: [food], mood: [mood]"
+            jump swamp
+        
+return
+
+label forest_5:
+    J "Please, help me"
+    J "I must to find the right way"
+    F "I know"
+    F "I like you, so I'll help you"
+    F "You should find the swamp"
+    F "I will lead you"
+    jump swamp
+return
+
+label swamp:
+    "Fairy led Jack to the swamp and disappeared"
+    J "She said the flower in the middle of swamp"
+    if shoes == 1:
+        "Wearing the magic shoes, he got to the Flower"
+        J "Yes!"
+        jump ending_2
+    else:
+        J "I havn't the special footwear for transition"
+        J "I can try to return to the village and find it from one of the residents. Lora exactly have one"
+        menu:
+            "Return to the village":
+                "The way back was faster than he thought"
+                "But Jack is very tired"
+                $ energy -= 25
+                "Energy is [energy], food: [food], mood: [mood]"
+                if energy <= 0:
+                    jump ending_1
+                else:
+                    if energy <= 25:
+                        "Jack need to rest. Energy is [energy]"
+                        menu:
+                            "Eat" if food > 0:
+                                $ food -= 1
+                                $ energy += 15
+                                $ mood += 3
+                                if mood <= 0:
+                                    jump ending_3
+                                else:
+                                    "Energy is [energy], food: [food], mood: [mood]"
+                                    jump village
+                            "Continue":
+                                jump village
+                    else:
+                        jump village
+            "Go through the swamp":
+                $ death = renpy.random.choice([True,True,True,False])
+                if death:
+                    "Jack moves slowly toward the center. The swamp tightens it stronger and stronger with every step."
+                    "He sees a flower. It is enough to reach out and it will be with him. But Jack cannot move."
+                    "He goes into the depths of half a meter from the target"
+                    jump ending_1
+                else: 
+                    "Jack can easily reach the flower. He coped!"
+                    J "Yes!"
+                    J "Сamilla will be mine"
+                    jump ending_2
+return
+
+label village:
+    $ love = renpy.random.choice([True,False,False,False])
+    if love:
+        show C
+        J "Hi, Camilla!"
+        $ hey = renpy.random.choice([True,False])
+        if hey:
+            C "Hi, Jack! I glad to see you!"
+            $ mood += 50
+            "Jack was inspired by the meeting with Camilla and his mood became [mood]"
+            menu: 
+                "Go to Lora":
+                    $ energy -= 10
+                    "Energy is [energy], food: [food], mood: [mood]"
+                    if energy <= 0:
+                        jump ending_1
+                    else:
+                        if energy <= 25:
+                            "Jack need to rest. Energy is [energy]"
+                            menu:
+                                "Eat" if food > 0:
+                                    $ food -= 1
+                                    $ energy += 15
+                                    $ mood += 3
+                                    if mood <= 0:
+                                        jump ending_3
+                                    else:
+                                        "Energy is [energy], food: [food], mood: [mood]"
+                                        jump Lora_f
+                                "Continue":
+                                    jump Lora_f
+                        else:
+                            jump Lora_f
+                "Go to home":
+                    $ energy += 5
+                    "Jack relaxs and replenish energy"
+                    "Jack's energy is [energy] and mood-[mood],charisma-[charisma], food-[food], money-[money], luck-[luck]"
+                    "I need to go to Lora"
+                    jump Lora_f
+        else:
+            "Camilla ignores Jack"
+            $ mood -= 50
+            "Mood is [mood]"
+            if mood <= 0:
+                jump ending_3
+            else:
+                menu: 
+                    "Go to Lora":
+                        $ energy -= 10
+                        "Energy is [energy], food: [food], mood: [mood]"
+                        if energy <= 0:
+                            jump ending_1
+                        else:
+                            if energy <= 25:
+                                "Jack need to rest. Energy is [energy]"
+                                menu:
+                                    "Eat" if food > 0:
+                                        $ food -= 1
+                                        $ energy += 15
+                                        $ mood += 3
+                                        if mood <= 0:
+                                            jump ending_3
+                                        else:
+                                            "Energy is [energy], food: [food], mood: [mood]"
+                                            jump Lora_f
+                                    "Continue":
+                                        jump Lora_f
+                            else:
+                                jump Lora_f
+                    "Go to home":
+                        $ energy += 5
+                        "Jack relaxs and replenish energy"
+                        "Jack's energy is [energy] and mood-[mood],charisma-[charisma], food-[food], money-[money], luck-[luck]"
+                        "I need to go to Lora"
+                        jump Lora_f
+    else:
+        menu: 
+            "Go to Lora":
+                $ energy -= 10
+                "Energy is [energy], food: [food], mood: [mood]"
+                if energy <= 0:
+                    jump ending_1
+                else:
+                    if energy <= 25:
+                        "Jack need to rest. Energy is [energy]"
+                        menu:
+                            "Eat" if food > 0:
+                                $ food -= 1
+                                $ energy += 15
+                                $ mood += 3
+                                if mood <= 0:
+                                    jump ending_3
+                                else:
+                                    "Energy is [energy], food: [food], mood: [mood]"
+                                    jump Lora_f
+                            "Continue":
+                                jump Lora_f
+                    else:
+                        jump Lora_f
+            "Go to home":
+                $ energy += 5
+                "Jack relaxs and replenish energy"
+                "Jack's energy is [energy] and mood-[mood],charisma-[charisma], food-[food], money-[money], luck-[luck]"
+                "I need to go to Lora"
+                jump Lora_f
+        
+return
+
+label Lora_f:
+    J "Hello, Lora"
+    J "You sell magic items, so you probably should have shoes to cross the swamp"
+    L "Of course"
+    L "I will give it to you, if you bring me a potion from insomnia"
+    L "It must be with the Old man"
+    J "Ok"
+    "Jack goes to Old man"
+    "He looks angry"
+    J "Hello! I want to buy a potion"
+    O "Of course, everyone want to buy a potion. Let's see if you have enough money"
+    J "I have [money] lur"
+    menu:
+        "Potion from insomnia [price_potion_insomnia]":
+            "Jack goes back to Lora"
+            J "Hold on, I got it"
+            L "Great!"
+            L "Here are your shoes, as I promised"
+            jump forest_L
+return
+
+label forest_L:
+    "Jack quickly found the way back to the swamp"
+    "Wearing the magic shoes, he got to the Flower"
+    J "Yes!"
+    jump ending_2
+return 
+    
+label old:
+    $ energy -= 3 
+    if energy <= 25:
+        "Jack need to rest. Energy is [energy]"
+        menu:
+            "Eat" if food > 0:
+                $ food -= 1
+                $ energy += 15
+                $ mood += 3
+                if mood <= 0:
+                    jump ending_3
+                else:
+                    "Energy is [energy], food: [food], mood: [mood]"
+                    jump continu
+            "Continue": 
+                jump continu
+return
+
+label continu:
+    J "Good morning, Man!"
+    "Energy is [energy], food: [food], mood: [mood]"
+    menu:
+        "Buy something":
+            jump buy
+        "Ask about Flower":
+            J "I heard you know something about the Flower of Love"
+            O "Maybe yes, maybe no."
+            O "As the sun rises in the east and lands in the west, as the moon always follows the sun, and the day follows night, so my memories are variable"
+            J "What? It is pointless"
+            O "Oh...younger generation."
+            O "I know where the flower is. And I will say by the kindness of the soul"
+            O "You must find the cave that is behind the Lake of Tears. The Flower grows in this cave"
+            O "It's all. I will not say anything more about it."
+            J "Thank you"
+            $ mood -= 25
+            $ energy -= 25
+            J "There is not a single lake"
+            "Energy is [energy], food: [food], mood: [mood]"
+            if energy <= 0:
+                jump ending_1
+            else:
+                if energy <= 25:
+                    "Jack need to rest. Energy is [energy]"
+                    menu:
+                        "Eat" if food > 0:
+                            $ food -= 1
+                            $ energy += 15
+                            $ mood += 3
+                            if mood <= 0:
+                                jump ending_3
+                            else:
+                                "Energy is [energy], food: [food], mood: [mood]"
+                                menu:
+                                    "Buy something" if money >= 50:
+                                        jump buy
+                                    "Go to the Forest":
+                                        jump forest
+                                    "Go to Roger":
+                                        jump Roger
+                                    "Go to Lora":
+                                        jump Lora       
+                        "Continue":
+                            menu:
+                                "Buy something" if money >= 50:
+                                    jump buy
+                                "Go to the Forest":
+                                    jump forest
+                                "Go to Roger":
+                                    jump Roger
+                                "Go to Lora":
+                                    jump Lora     
+                else:
+                    menu:
+                        "Buy something" if money >= 50:
+                            jump buy
+                        "Go to the Forest":
+                            jump forest
+                        "Go to Roger":
+                            jump Roger
+                        "Go to Lora":
+                            jump Lora         
+return
+
+label buy:
+    J "I have [money] lur"
+    menu:
+        "Pie - [price_pie]" if money >=price_pie:
+            $ money -= price_pie
+            $ food += 1
+            O "Good choice!"
+            "Energy is [energy], food: [food], mood: [mood]"
+            if energy <= 25:
+                "Jack need to rest. Energy is [energy]"
+                menu:
+                    "Eat" if food > 0:
+                        $ food -= 1
+                        $ energy += 15
+                        $ mood += 3
+                        if mood <= 0:
+                            jump ending_3
+                        else:
+                            menu:
+                                "Buy something" if money >= 50:
+                                    jump buy
+                                "Go to the Forest":
+                                    jump forest
+                                "Go to Roger":
+                                    jump Roger
+                    "Continue":
+                        menu:
+                            "Buy something" if money >= 50:
+                                jump buy
+                            "Go to the Forest":
+                                jump forest
+                            "Go to Roger":
+                                jump Roger
+            else:
+                menu:
+                    "Buy something" if money >= 50:
+                        jump buy
+                    "Go to the Forest":
+                        jump forest
+                    "Go to Roger":
+                        jump Roger
+        "Meat - [price_meat]" if money >= price_meat:
+            $ money -= price_meat
+            $ food += 2
+            "Jack's energy is [energy] and mood-[mood],charisma-[charisma], food-[food], money-[money], luck-[luck]"
+            if energy <= 25:
+                "Jack need to rest. Energy is [energy]"
+                menu:
+                    "Eat" if food > 0:
+                        $ food -= 1
+                        $ energy += 15
+                        $ mood += 3
+                        if mood <= 0:
+                            jump ending_3
+                        else:
+                            menu:
+                                "Buy something" if money >= 50:
+                                    jump buy
+                                "Go to the Forest":
+                                    jump forest
+                                "Go to Roger":
+                                    jump Roger
+                    "Continue":
+                        menu:
+                            "Buy something" if money >= 50:
+                                jump buy
+                            "Go to the Forest":
+                                jump forest
+                            "Go to Roger":
+                                jump Roger
+            else:
+                menu:
+                    "Buy something" if money >= 50:
+                        jump buy
+                    "Go to the Forest":
+                        jump forest
+                    "Go to Roger":
+                        jump Roger
+        "Amulet of luck - [price_amulet]" if money >= price_amulet:
+            $ luck += 100
+            "Jack's energy is [energy] and mood-[mood],charisma-[charisma], food-[food], money-[money], luck-[luck]"
+            menu:
+                "Buy something" if money >= 50:
+                    jump buy
+                "Go to the Forest":
+                    jump forest
+                "Go to Roger":
+                    jump Roger  
+        "I don't want to buy":
+            "Jack's energy is [energy] and mood-[mood],charisma-[charisma], food-[food], money-[money], luck-[luck]"
+            menu:
+                "Buy something" if money >= 50:
+                    jump buy
+                "Go to the Forest":
+                    jump forest
+                "Go to Roger":
+                    jump Roger
+            
+return
+
+label Roger:
+    "Roger is a forester, so he can know where to look for a flower. Also, Roger always has money, and if Jack persuades him, he will be able to borrow a little."
+    $ energy -= 3
+    "Energy is [energy], food: [food], mood: [mood]"
+    if energy <= 0:
+        jump ending_1
+    else:
+        if energy <= 25:
+            "Jack need to rest. Energy is [energy]"
+            menu:
+                "Eat" if food > 0:
+                    $ food -= 1
+                    $ energy += 15
+                    $ mood += 3
+                    if mood <= 0:
+                        jump ending_3
+                    else:
+                        jump roger
+                "Continue":
+                        jump roger      
+        else:
+            jump roger
+return
+
+label roger:
+    "Hi, Roger!"
+    J "I want to ask you a favor."
+    "Jack's energy is [energy] and mood-[mood],charisma-[charisma], food-[food], money-[money], luck-[luck]"
+    menu:
+        "Ask to borrow money":
+            if charisma >= 80:
+                R "Of course, my friend"
+                R "How much you need?"
+                $ debt = renpy.input("Enter amount")
+                $ debt = debt.strip()
+                J "I need [debt]"
+                R "Ok"
+                $ money += debt
+                J "I have [money] lur"
+                $ charisma -= 50
+                $ mood += 25
+                "Jack's energy is [energy] and mood-[mood],charisma-[charisma], food-[food], money-[money], luck-[luck]"
+                menu:
+                    "Go to Forest":
+                        jump forest
+                    "Go to Lora":
+                        jump Lora
+                    "Go to Old man":
+                        jump old
+            else:
+                R "Sorry, i don't have money now"
+                $ mood -= 50
+                "Mood is decreased"
+                "Mood is [mood]"
+                if [mood] <= 0:
+                    jump ending_3
+                else:
+                     menu:
+                        "Go to Forest":
+                            jump forest
+                        "Go to Lora":
+                            jump Lora
+                        "Go to Old man":
+                            jump old
+        "Ask where is the Flower may be":
+            if luck >= 100:
+                R "Please, don't tell me that this is what I thought"
+                J "Yes!"
+                R "No"
+                R "This woman will take you to the grave"
+                R "..."
+                R "I cannot convince you"
+                "Roger tells how to find the Flower"
+                J "Thank you! I owe you"
+                "Jack following Roger's instructions, quickly got to the swamp"
+                "Roger even gave him magic boots, thanks to which Jack got to the flower, unpolished in the mud"
+                jump ending_2
+            else:
+                R "I don't know"
+                R "But you can find someone in the forest who can help you"
+                R "And remember: blue, then red."
+                J "..."
+                R "You will understand everything."
+                menu:
+                    "Go to Forest":
+                        jump forest
+                    "Go to Lora":
+                        jump Lora
+                    "Go to Old man":
+                        jump old
+return
+
+label Lora:
+    $ energy -= 3
+    "Energy is [energy], food: [food], mood: [mood]"
+    if energy <= 0:
+        jump ending_1
+    else:
+        if energy <= 25:
+            "Jack need to rest. Energy is [energy]"
+            menu:
+                "Eat" if food > 0:
+                    $ food -= 1
+                    $ energy += 15
+                    $ mood += 3
+                    if mood <= 0:
+                        jump ending_3
+                    else:
+                        jump loora
+                "Continue":
+                        jump loora     
+        else:
+            jump loora
+return
+
+label loora:
+    "Lora have the shop of magical things"
+    L "Hello, do you want to buy something?"
+    J "I have [money] lur"
+    menu:
+        "No, I don't":
+            menu:
+                "Go to Forest":
+                    jump forest
+                "Go to Roger":
+                    jump Roger
+                "Go to Old man":
+                    jump old
+        "Yes, I do":
+            jump clothes
+return
+
+label clothes:
+    menu:
+        "Cloak - [price_cloak] lur" if money >= price_cloak:
+            L "Great choice!"
+            $ money -= price_cloak
+            $ charisma += 20
+            "Charisma: [charisma] and money: [money]"
+            jump clothes
+        "Hat - [price_hat] lur" if money >= price_hat:
+            L "It looks amazing on you"
+            $ money -= price_hat
+            $ charisma += 10
+            "Charisma: [charisma] and money: [money]"
+            jump clothes
+        "Magical shoes - [price_shoes] lur" if money >= price_shoes:
+            L "Ok!" 
+            $ money -= price_shoes
+            $ shoes += 1
+            jump clothes
+        "It is enough":
+            menu:
+                "Go to Forest":
+                    jump forest
+                "Go to Roger":
+                    jump Roger
+                "Go to Old man":
+                    jump old
+return
+
+label ending_1:
+    "You lose"
+return
+
+label ending_2:
+    "Jack found the flower, so Camilla married him"
+return
+
+label ending_3:
+    J "It is pointless"
+    J "If Camilla love me, she will marry me without stupid flower"
+    J "She believes I can't do it"
+    J "She doesn't want to marry me"
+    J "The flower is just exuse" 
+    J "Here I am a fool"
+    J "I totally will die If I continue to look out"
+return
